@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+  <form action="/mysql/import/hivePlus" method="post">
+
+    数据源id: <input type="text" name="sourceId" value="2" /><br>
+    数据源类型:
+    <input type="radio" name="approach" value="append" checked required />追加
+    <input type="radio" name="approach" value="overwrite" checked required />覆写
+    <br><br>
+
+
+    地址: <input type="text" name="address" value="hh1" /><br>
+    端口: <input type="text" name="port" value="3306" /><br>
+    数据库名: <input type="text" name="database" value="test" /><br>
+    用户名: <input type="text" name="username" value="hive" /><br>
+    密码: <input type="password" name="password" value="123456" /><br>
+    数据表名: <input type="text" name="table" value="make" /><br>
+    编码方式: <input type="text" name="charset" value="utf8" /><br><br><br>
+
+    <input type="submit" value="提交" />
+  </form>
+
+</body>
+</html>

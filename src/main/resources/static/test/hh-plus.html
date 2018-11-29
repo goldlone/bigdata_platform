@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+  <form action="/file/upload/hdfsPlus" method="post" enctype="multipart/form-data">
+    数据源id: <input type="text" name="sourceId" value="10" required /><br><br>
+    数据源类型:
+    <input type="radio" name="approach" value="append" checked required />追加
+    <input type="radio" name="approach" value="overwrite" checked required />覆写
+    <br><br>
+
+    数据源文件: <input name="file" type="file" />
+
+    <br><br><br>
+    <input type="submit" value="提交" />
+  </form>
+
+</body>
+</html>

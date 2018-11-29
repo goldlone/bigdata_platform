@@ -1,0 +1,55 @@
+redisHost: redis://10.9.70.211:6379/3
+
+# 集群相关配置
+cluster:
+  # SSH 相关配置
+  hostname: hh
+  username: hadoop
+  password: hadoop
+  user:
+    # 用户HDFS个人目录
+    path: /bigdata_platform/user
+  hdfs:
+    # HDFS的NameNode所在地址
+    hostname: 10.9.70.211
+    # NameNode RPC 端口
+    port: 9000
+  hive:
+    url: jdbc:hive2://hh:10000/
+    username: hadoop
+    password: hadoop
+    database: bigdata_platform
+
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://10.9.70.211:3306/bigdata_platform?useSSL=false&characterEncoding=utf8
+    username: team05
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+  thymeleaf:
+    mode: HTML
+    cache: false
+    encoding: UTF-8
+  servlet:
+    multipart:
+      max-file-size: 256M
+      max-request-size: 256M
+
+mybatis:
+  configuration:
+    default-statement-timeout: 3000
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
+    cache-enabled: true
+  mapper-locations: classpath:mybatis/*.xml
+
+logging:
+  level:
+    cn:
+      goldlone:
+        bigdata_platform:
+          dao: DEBUG
+

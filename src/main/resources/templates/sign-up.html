@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>大数据计算平台 - 注册</title>
+  <meta name="description" content="这是一个 index 页面">
+  <meta name="keywords" content="index">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp"/>
+  <link rel="icon" type="image/png" th:href="@{assets/i/favicon.png}">
+  <link rel="apple-touch-icon-precomposed" th:href="@{assets/i/app-icon72x72@2x.png}">
+  <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+  <link rel="stylesheet" th:href="@{assets/css/amazeui.min.css}"/>
+  <link rel="stylesheet" th:href="@{assets/css/amazeui.datatables.min.css}"/>
+  <link rel="stylesheet" th:href="@{assets/css/app.css}">
+  <script th:src="@{assets/js/jquery.min.js}"></script>
+
+</head>
+
+<body data-type="login">
+<script th:src="@{assets/js/theme.js}"></script>
+
+<div class="am-g tpl-g">
+
+  <div th:include="style.html"></div>
+
+  <div class="tpl-login">
+    <div class="tpl-login-content">
+      <div class="tpl-login-title">注册用户</div>
+      <span class="tpl-login-content-info">创建一个新的用户</span>
+
+      <form class="am-form tpl-form-line-form" method="post" action="/register">
+        <div class="am-form-group">
+          <input type="text" class="tpl-form-input" name="username" placeholder="请输入用户名" required>
+        </div>
+
+        <div class="am-form-group">
+          <input type="text" class="tpl-form-input" name="name" placeholder="请输入昵称" required>
+        </div>
+
+        <div class="am-form-group">
+          <input type="password" class="tpl-form-input" name="password" placeholder="请输入密码" required>
+        </div>
+
+        <!--<div class="am-form-group">-->
+          <!--<input type="password" class="tpl-form-input" name="" placeholder="再次输入密码" required>-->
+        <!--</div>-->
+
+        <div class="am-form-group tpl-login-remember-me">
+          <input id="remember-me" type="checkbox" required>
+          <label for="remember-me">
+            我已阅读并同意
+            <a href="javascript:;" data-am-modal="{target: '#user-protocol-popup'}">《用户注册协议》</a>
+          </label>
+        </div>
+
+        <div class="am-form-group">
+          <button type="submit" class="am-btn am-btn-primary  am-btn-block tpl-btn-bg-color-success  tpl-login-btn">注册</button>
+        </div>
+        <div class="am-form-group">
+          <a type="button" class="am-btn am-btn-primary am-btn-block tpl-btn-bg-color-success tpl-login-btn" href="/login">已有账号，前往登录</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div th:if="${msg != null}">
+  <!-- 提示消息模态框 -->
+  <div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+    <div class="am-modal-dialog">
+      <div class="am-modal-hd">提示消息</div>
+      <div class="am-modal-bd">
+        <span th:text="${msg}"></span>
+      </div>
+      <div class="am-modal-footer">
+        <span class="am-modal-btn">确定</span>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    $(function() {
+      $('#my-alert').modal();
+    });
+  </script>
+</div>
+
+<!-- 用户协议 -->
+<div class="am-popup" id="user-protocol-popup">
+  <div class="am-popup-inner">
+    <div class="am-popup-hd">
+      <h4 class="am-popup-title">用户协议</h4>
+      <span data-am-modal-close
+            class="am-close">&times;</span>
+    </div>
+    <div class="am-popup-bd">
+      应该有些协议，但是我懒得写了。
+    </div>
+  </div>
+</div>
+
+<script th:src="@{assets/js/amazeui.min.js}"></script>
+<script th:src="@{assets/js/app.js}"></script>
+
+</body>
+
+</html>

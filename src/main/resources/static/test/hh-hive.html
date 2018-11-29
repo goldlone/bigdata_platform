@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<form id="form">
+
+  <div>
+    数据源名称：<input type="text" name="sourceName" required>
+  </div>
+  <div>
+    数据源类型：
+    <input type="radio" name="sourceType" value="hive" checked>Hive
+    <input type="radio" name="sourceType" value="hdfs">HDFS
+  </div>
+  <div>
+    数据源分组：
+    <select name="groupId" required>
+      <option value="1">日志</option>
+      <option value="2">金融</option>
+      <option value="3">通信</option>
+      <option value="4">医疗</option>
+      <option value="5">交通</option>
+    </select>
+  </div>
+  <div>
+    字段分割符：<input type="text" name="fieldTerminated" value="\t" >
+  </div>
+
+  <div>
+    列名1：<input type="text" name="columns" value="id" required> &nbsp;&nbsp;
+    数据类型：
+    <select name="dataTypes" required>
+      <option value="int">int</option>
+      <option value="string">string</option>
+    </select>
+  </div>
+  <div>
+    列名2：<input type="text" name="columns" value="name" required> &nbsp;&nbsp;
+    数据类型：
+    <select name="dataTypes" required>
+      <option value="int">int</option>
+      <option value="string">string</option>
+    </select>
+  </div>
+  <div>
+    <button type="button">+</button>&nbsp;&nbsp;
+    <button type="button">-</button>
+  </div>
+
+  <div>
+    数据：<input type="file" name="file" required>
+  </div>
+
+  <br>
+  <div>
+    <input type="button" id="submit" value="提交">
+  </div>
+
+</form>
+
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript">
+  $(function () {
+    // var sourceType = "hive";
+    // $("input[name='sourceType']").click(function () {
+    //   sourceType = $(this)[0].value
+    // });
+
+    $("#submit").click(function () {
+      // var cols = $("input[name='columns']");
+      // var types = $("select[name='dataTypes']");
+      // var dataFormat = "";
+      // for(var i=0; i<cols.length; i++) {
+      //   dataFormat += cols[i].value+","+types[i].value;
+      // }
+
+      var file = $("input[type='file']")[0].files;
+      if(file.length == 0) {
+        alert("未选择上传文件");
+        return;
+      }
+
+      // var fieldData = "sourceName=" + encodeURIComponent($("input[name='sourceName']")[0].value)
+      //     + "&sourceType=" + encodeURIComponent(sourceType)
+      //     + "&groupId=" + encodeURIComponent($("select[name='groupId']")[0].value)
+      //     + "&fieldTerminated=" + encodeURIComponent($("input[name='fieldTerminated']")[0].value)
+      //     + "&columns=" + encodeURIComponent(JSON.stringify(dataFormat));
+
+      var fileFormData = new FormData();
+      fileFormData.append("file", file[0]);
+
+      var fieldData = $("#form").serialize();
+      // console.log(fieldData);
+      $.ajax({
+        url: "/file/upload/hive?" + fieldData,
+        method: "post",
+        contentType: false,
+        processData: false,
+        data: fileFormData,
+        dataType: "json",
+        success: function (res) {
+          console.log(res);
+        }
+      })
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.goldlone.bigdata_platform.dao.DataSourceDao">
+
+  <resultMap id="dataSourceRef" type="cn.goldlone.bigdata_platform.model.DataSource">
+    <result property="id" column="id" />
+    <result property="sourceName" column="source_name" />
+    <result property="sourceType" column="source_type" />
+    <result property="hdfsPath" column="hdfs_path" />
+    <result property="hiveTable" column="hive_table" />
+    <result property="tableColumn" column="table_column" />
+    <result property="userId" column="user_id" />
+    <result property="groupId" column="group_id" />
+    <result property="createDate" column="create_date" />
+    <result property="modifyData" column="modify_date" />
+  </resultMap>
+
+
+  <select id="getDataSource" resultMap="dataSourceRef">
+    select id, source_name, source_type, hdfs_path, hive_table,
+      table_column, user_id, group_id, create_date, modify_date
+    from data_source
+    where user_id = #{userId}
+    order by create_date desc
+    limit #{offset}, #{limit}
+  </select>
+
+  <select id="selectAllByType" resultMap="dataSourceRef">
+    select id, source_name, source_type, hdfs_path, hive_table,
+      table_column, user_id, group_id, create_date, modify_date
+    from data_source
+    where user_id = #{userId} and
+          source_type=#{type}
+    order by create_date desc
+  </select>
+
+  <select id="getDataSourceCount" resultType="int">
+    select count(1)
+    from data_source
+    where user_id=#{userId}
+  </select>
+
+  <select id="getDataSourceById" resultMap="dataSourceRef">
+    select id, source_name, source_type, hdfs_path, hive_table,
+      table_column, user_id, group_id, create_date, modify_date
+    from data_source
+    where id = #{id}
+  </select>
+
+  <insert id="addDataSource" parameterType="cn.goldlone.bigdata_platform.model.DataSource"
+          useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+    insert
+    into data_source(source_name, source_type, hdfs_path,
+                     hive_table, table_column, user_id,
+                     group_id, create_date, modify_date)
+    values(#{sourceName}, #{sourceType}, #{hdfsPath},
+           #{hiveTable}, #{tableColumn}, #{userId},
+           #{groupId}, #{createDate}, #{modifyData})
+  </insert>
+
+  <!-- 修改数据源信息 -->
+  <update id="updateDataSource" parameterType="cn.goldlone.bigdata_platform.model.DataSource">
+    update data_source
+    <set>
+      <if test="sourceName != null">source_name = #{sourceName},</if>
+      <!--<if test="sourceType != null">source_type = #{sourceType},</if>-->
+      <!--<if test="hdfsPath != null">hdfs_path = #{hdfsPath},</if>-->
+      <!--<if test="hiveTable != null">hive_table = #{hiveTable},</if>-->
+      <!--<if test="tableColumn != null">table_column = #{tableColumn},</if>-->
+      <if test="groupId != null">group_id = #{groupId},</if>
+      <if test="modifyData != null">modify_date = #{modifyData}</if>
+    </set>
+    where id = #{id}
+  </update>
+
+  <!-- 删除数据源 -->
+  <delete id="deleteDataSource" parameterType="int">
+    delete
+    from data_source
+    where id = #{id}
+  </delete>
+
+</mapper>

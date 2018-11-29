@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>大数据计算平台 - 消息列表</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="index">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp"/>
+  <link rel="icon" type="image/png" th:href="@{/assets/i/favicon.png}">
+  <link rel="apple-touch-icon-precomposed" th:href="@{/assets/i/app-icon72x72@2x.png}">
+  <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+  <script th:src="@{/assets/js/echarts.min.js}"></script>
+  <link rel="stylesheet" th:href="@{/assets/css/amazeui.min.css}"/>
+  <link rel="stylesheet" th:href="@{/assets/css/amazeui.datatables.min.css}"/>
+  <link rel="stylesheet" th:href="@{/assets/css/app.css}">
+  <script th:src="@{/assets/js/jquery.min.js}"></script>
+
+</head>
+
+<body data-type="widgets">
+<script th:src="@{/assets/js/theme.js}"></script>
+
+<div class="am-g tpl-g">
+  <!-- 头部 -->
+  <div th:include="header.html"></div>
+
+  <!-- 风格切换 -->
+  <div th:include="style.html"></div>
+
+  <!-- 侧边导航栏 -->
+  <div th:include="left-sidebar.html"></div>
+
+  <!-- 内容区域 -->
+  <div class="tpl-content-wrapper">
+    <div class="row-content am-cf">
+      <div class="row">
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+          <div class="widget am-cf">
+            <div class="widget-head am-cf">
+              <div class="widget-title  am-cf">消息列表</div>
+            </div>
+
+            <div class="widget-body  am-fr">
+              <!--<div class="am-u-sm-12 am-u-md-6 am-u-lg-9">-->
+                <!--<div class="am-form-group">-->
+                  <!--<div class="am-btn-toolbar">-->
+                    <!--<div class="am-btn-group am-btn-group-xs">-->
+                      <!--<button type="button" id="add-btn" class="am-btn am-btn-default am-btn-success"><span class="am-icon-plus"></span> 新增</button>-->
+                      <!--<button type="button" class="am-btn am-btn-default am-btn-secondary"><span class="am-icon-save"></span> 保存</button>-->
+                      <!--<button type="button" class="am-btn am-btn-default am-btn-warning"><span class="am-icon-archive"></span> 审核</button>-->
+                      <!--<button type="button" class="am-btn am-btn-default am-btn-danger"><span class="am-icon-trash-o"></span> 删除</button>-->
+                    <!--</div>-->
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</div>-->
+
+              <div class="am-u-sm-12">
+                <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black ">
+                  <thead>
+                  <tr>
+                    <th>时间</th>
+                    <th>消息内容</th>
+                    <th>操作</th>
+                  </tr>
+                  </thead>
+                  <tbody id="table-data">
+                  <tr th:each="msg,iterStat : ${messages}"
+                      th:classappend="${iterStat.odd} ? 'gradeX' : 'even gradeC'"
+                      th:attr="data-id=${msg.id}">
+                    <td>
+                      <span>
+                      <span th:if="${msg.hasRead == 0}"><a class="am-badge am-badge-warning am-round">未读</a></span>
+                      <span th:if="${msg.hasRead == 1}"><a class="am-badge am-badge-success am-round">已读</a></span>
+                      <span th:text="${#dates.format(msg.createDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                      </span>
+                    </td>
+                    <td th:text="${msg.content}"></td>
+                    <td>
+                      <div class="tpl-table-black-operation">
+                        <a href="javascript:;" th:attr="data-id=${msg.id}" approach="read">
+                          <i class="am-icon-eye"></i> 查看</a>
+                        <a href="javascript:;" class="tpl-table-black-operation-del"
+                           th:attr="data-id=${msg.id}" approach="delete">
+                          <i class="am-icon-trash"></i> 删除</a>
+                      </div>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- 分页 -->
+              <div class="am-u-lg-12 am-cf" th:if="${pages.totalPage > 1}">
+                <div class="am-fr">
+                  <ul class="am-pagination tpl-pagination">
+                    <li th:classappend="${pages.previous == 0} ? 'am-disabled'"><a href="/message/manager?p=1">«</a></li>
+                    <li th:each="item : ${pages.getPages()}" th:classappend="${item == pages.pageNum} ? 'am-active am-disabled'"><a th:href="'/message/manager?p=' + ${item}" th:text="${item}"></a></li>
+                    <li th:classappend="${pages.pageNum == pages.totalPage} ? 'am-disabled'"><a th:href="'/message/manager?p=' + ${pages.totalPage}">»</a></li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+  <div class="am-modal-dialog">
+    <div class="am-modal-hd">提示消息</div>
+    <div class="am-modal-bd">
+      <span id="msg"></span>
+    </div>
+    <div class="am-modal-footer">
+      <span class="am-modal-btn">确定</span>
+    </div>
+  </div>
+</div>
+
+<script th:src="@{/assets/js/amazeui.min.js}"></script>
+<script th:src="@{/assets/js/amazeui.datatables.min.js}"></script>
+<script th:src="@{/assets/js/dataTables.responsive.min.js}"></script>
+<script th:src="@{/assets/js/app.js}"></script>
+
+<script type="text/javascript">
+  $(function () {
+    var alertModel = $("#my-alert");
+    var msgSpan = $("#msg");
+
+    $("#table-data").on("click", "a[approach]", function () {
+      var approach = $(this)[0].getAttribute("approach");
+      var id = $(this)[0].getAttribute("data-id");
+      console.log(approach + " => " + id);
+
+      switch(approach) {
+        case "read":
+          $.ajax({
+            url: "/message/read",
+            method: "post",
+            data: {
+              messageId: id
+            },
+            success: function (res) {
+              if(res.code === 1001) {
+                showAlert("标记成功");
+              } else {
+                showAlert(res.msg);
+              }
+            }
+          });
+          break;
+        case "delete":
+          showAlert("就不让你删");
+          // $.ajax({
+          //   url: "/dataSource/delete",
+          //   method: "post",
+          //   data: {
+          //     sourceId: id
+          //   },
+          //   success: function (res) {
+          //     showAlert("提交删除成功");
+          //     $("tr[data-id=" + id + "]")[0].remove();
+          //   }
+          // });
+          break;
+      }
+
+    });
+
+    function showAlert(msg) {
+      msgSpan.html(msg);
+      alertModel.modal();
+    }
+  });
+</script>
+
+</body>
+
+</html>

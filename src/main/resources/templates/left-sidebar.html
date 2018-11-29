@@ -1,0 +1,60 @@
+<!-- 侧边导航栏 -->
+<div class="left-sidebar" xmlns:th="http://www.thymeleaf.org">
+  <!-- 用户信息 -->
+  <div class="tpl-sidebar-user-panel">
+    <div class="tpl-user-panel-slide-toggleable" style="text-align: center">
+      <div class="tpl-user-panel-profile-picture"  style="margin: 0 auto;">
+        <img th:src="@{/assets/img/user04.png}" alt="">
+      </div>
+      <span class="user-panel-logged-in-text" style="margin-top: 10px">
+        <i class="am-icon-circle-o am-text-success tpl-user-panel-status-icon"></i>
+        <span th:if="${user != null}" th:text="${user.name}"></span>
+      </span>
+      <!--<a href="javascript:;" class="tpl-user-panel-action-link"> <span class="am-icon-pencil"></span>账号设置</a>-->
+    </div>
+  </div>
+
+  <!-- 菜单 -->
+  <ul class="sidebar-nav">
+    <li class="sidebar-nav-link">
+      <a href="javascript:;" class="sidebar-nav-sub-title"
+         th:classappend="${page eq 'index' or page eq 'dataGroupManager'} ? 'active'">
+        <i class="am-icon-table sidebar-nav-link-logo"></i> 数据源管理
+        <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico sidebar-nav-sub-ico-rotate"></span>
+      </a>
+      <ul class="sidebar-nav sidebar-nav-sub" style="display: block;">
+        <li class="sidebar-nav-link">
+          <a href="/" class="" th:classappend="${page eq 'index'} ? 'sub-active'">
+            <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 数据源
+          </a>
+        </li>
+
+        <li class="sidebar-nav-link">
+          <a href="/dataGroup/manager" class="" th:classappend="${page eq 'dataGroupManager'} ? 'sub-active'">
+            <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 数据源分组
+          </a>
+        </li>
+      </ul>
+    </li>
+
+
+    <li class="sidebar-nav-link">
+      <a href="/dataFlow/manager" th:classappend="${page eq 'dataFlowManager'} ? 'active'">
+        <i class="am-icon-wpforms sidebar-nav-link-logo"></i> 数据分析
+      </a>
+    </li>
+
+    <li class="sidebar-nav-link">
+      <a href="/dataShow/manager" th:classappend="${page eq 'dataShow'} ? 'active'">
+        <i class="am-icon-bar-chart sidebar-nav-link-logo"></i> 结果展示
+      </a>
+    </li>
+
+    <li class="sidebar-nav-link">
+      <a href="/message/manager" th:classappend="${page eq 'messageManager'} ? 'active'">
+        <i class="am-icon-bell sidebar-nav-link-logo"></i> 消息列表
+      </a>
+    </li>
+
+  </ul>
+</div>

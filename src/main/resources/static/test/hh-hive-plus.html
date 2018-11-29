@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<form id="form">
+
+  <div>
+    数据源id：<input type="text" name="sourceId" value="12" required>
+  </div>
+
+  <div>
+    数据源类型:
+    <input type="radio" name="approach" value="append" checked required />追加
+    <input type="radio" name="approach" value="overwrite" checked required />覆写
+  </div>
+
+  <div>
+    数据：<input type="file" name="file" required>
+  </div>
+
+  <br>
+  <div>
+    <input type="button" id="submit" value="提交">
+  </div>
+
+</form>
+
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript">
+  $(function () {
+    $("#submit").click(function () {
+      var file = $("input[type='file']")[0].files;
+      if (file.length == 0) {
+        alert("未选择上传文件");
+        return;
+      }
+      var fileFormData = new FormData();
+      fileFormData.append("file", file[0]);
+
+      var fieldData = $("#form").serialize();
+
+      $.ajax({
+        url: "/file/upload/hivePlus?" + fieldData,
+        method: "post",
+        contentType: false,
+        processData: false,
+        data: fileFormData,
+        dataType: "json",
+        success: function (res) {
+          console.log(res);
+        }
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

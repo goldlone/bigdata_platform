@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.goldlone.bigdata_platform.dao.DataFlowDao">
+  <resultMap id="dataFlowRef" type="cn.goldlone.bigdata_platform.model.DataFlow">
+    <result property="id" column="id" />
+    <result property="flowName" column="flow_name" />
+    <result property="sourceId" column="source_id" />
+    <result property="flowType" column="flow_type" />
+    <result property="mrName" column="mr_name" />
+    <result property="hiveSql" column="hive_sql" />
+    <result property="flowStatus" column="flow_status" />
+    <result property="resultTable" column="result_table" />
+    <result property="resultPath" column="result_path" />
+    <result property="userId" column="user_id" />
+  </resultMap>
+  
+  
+  <select id="getDataFlow" resultMap="dataFlowRef">
+    select id, flow_name, source_id, flow_type, mr_name, hive_sql,
+      flow_status, result_table, result_path, user_id
+    from data_flow
+    where user_id = #{userId}
+    order by id desc
+    limit #{offset}, #{limit}
+  </select>
+
+  <select id="getDataFlowByStatus" resultMap="dataFlowRef">
+    select id, flow_name, source_id, flow_type, mr_name, hive_sql,
+      flow_status, result_table, result_path, user_id
+    from data_flow
+    where user_id = #{userId} and
+          flow_type = #{flowType} and
+          flow_status = #{status}
+    order by id desc
+  </select>
+
+  <select id="getDataFlowCount" parameterType="int" resultType="int">
+    select count(1)
+    from data_flow
+    where user_id=#{userId}
+  </select>
+
+  <select id="getDataFlowById" parameterType="int" resultMap="dataFlowRef">
+    select id, flow_name, source_id, flow_type, mr_name, hive_sql,
+      flow_status, result_table, result_path, user_id
+    from data_flow
+    where id = #{dataFlowId}
+  </select>
+
+  <insert id="addDataFlow" parameterType="cn.goldlone.bigdata_platform.model.DataFlow"
+          useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    insert
+    into data_flow (flow_name, source_id, flow_type, mr_name, hive_sql,
+                    flow_status, result_table, result_path, user_id)
+    values (#{flowName}, #{sourceId}, #{flowType}, #{mrName}, #{hiveSql},
+            #{flowStatus}, #{resultTable}, #{resultPath}, #{userId})
+  </insert>
+
+  <update id="updateDataFlow" parameterType="cn.goldlone.bigdata_platform.model.DataFlow">
+    update data_flow
+    <set>
+      <if test="flowName != null">flow_name = #{flowName},</if>
+      <if test="sourceId != null">source_id = #{sourceId},</if>
+      <if test="hiveSql != null">hive_sql = #{hiveSql},</if>
+      <if test="flowStatus != null">flow_status = #{flowStatus},</if>
+      <if test="resultTable != null">result_table = #{resultTable},</if>
+      <if test="resultPath != null">result_path = #{resultPath}</if>
+    </set>
+    where id = #{id};
+  </update>
+
+  <update id="updateDataFlowStatus">
+    update data_flow
+    set flow_status = #{flowStatus}
+    where id = #{dataFlowId}
+  </update>
+
+  <delete id="deleteDataFlow" parameterType="int">
+    delete
+    from data_flow
+    where id = #{dataFlowId}
+  </delete>
+  
+</mapper>

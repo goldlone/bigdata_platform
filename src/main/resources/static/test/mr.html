@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>新建MR数据流程</title>
+</head>
+<body>
+
+<form id="form">
+
+  <div>
+    数据源id(这是不可改的):
+    <input type="text" name="sourceId" value="3" readonly required>
+  </div>
+
+  <div>
+    数据流程名称：
+    <input type="text" name="dataFlowName" required>
+  </div>
+
+  <div>
+    选择算法：
+    <select name="algorithm" required>
+      <option value="wordcount">词频统计</option>
+    </select>
+  </div>
+  <br><br>
+
+  <div>
+    <button type="button" id="submit">提交</button>
+  </div>
+</form>
+
+<script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+<script type="text/javascript">
+  $(function () {
+    $("#submit").click(function () {
+      $.ajax({
+        url: "/dataFlow/createMR",
+        type: "post",
+        data: $("#form").serialize(),
+        success: function (res) {
+          console.log(res);
+        }
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

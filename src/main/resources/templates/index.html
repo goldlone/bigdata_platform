@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>大数据计算平台 - 数据集</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="index">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp"/>
+  <link rel="icon" type="image/png" th:href="@{assets/i/favicon.png}">
+  <link rel="apple-touch-icon-precomposed" th:href="@{assets/i/app-icon72x72@2x.png}">
+  <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+  <script th:src="@{assets/js/echarts.min.js}"></script>
+  <link rel="stylesheet" th:href="@{assets/css/amazeui.min.css}"/>
+  <link rel="stylesheet" th:href="@{assets/css/amazeui.datatables.min.css}"/>
+  <link rel="stylesheet" th:href="@{assets/css/app.css}">
+  <script th:src="@{assets/js/jquery.min.js}"></script>
+  <style type="text/css">
+    .select {
+      /* 鼠标滑上样式 */
+      cursor: pointer;
+    }
+    .plus, .reduce {
+      color: white;
+      background-color: deepskyblue;
+      font-weight: bold;
+      /* border-radius的值等于height的一半 */
+      border-radius: 12px;
+      /* 声明为块级元素，以行内元素的方式排列 */
+      display: inline-block;
+      height: 24px;
+      width: 24px;
+      /* 垂直居中：line-height值等于height属性值 */
+      line-height: 24px;
+      /* 水平居中 */
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body data-type="index">
+<script th:src="@{assets/js/theme.js}"></script>
+<div class="am-g tpl-g">
+
+  <!-- 头部 -->
+  <div th:include="header.html"></div>
+
+  <!-- 风格切换 -->
+  <div th:include="style.html"></div>
+
+  <!-- 侧边导航栏 -->
+  <div th:include="left-sidebar.html"></div>
+
+  <!-- 内容区域 -->
+  <div class="tpl-content-wrapper">
+    <div class="row-content am-cf">
+      <div class="row">
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+          <div class="widget am-cf">
+            <div class="widget-head am-cf">
+              <div class="widget-title  am-cf">数据源列表</div>
+            </div>
+
+            <div class="widget-body  am-fr">
+              <div class="am-u-sm-12 am-u-md-6 am-u-lg-9">
+                <div class="am-form-group">
+                  <div class="am-btn-toolbar">
+                    <div class="am-btn-group am-btn-group-xs">
+                      <button type="button" id="add-btn" class="am-btn am-btn-default am-btn-success"><span class="am-icon-plus"></span> 新增</button>
+                      <!--<button type="button" class="am-btn am-btn-default am-btn-secondary"><span class="am-icon-save"></span> 保存</button>-->
+                      <!--<button type="button" class="am-btn am-btn-default am-btn-warning"><span class="am-icon-archive"></span> 审核</button>-->
+                      <!--<button type="button" class="am-btn am-btn-default am-btn-danger"><span class="am-icon-trash-o"></span> 删除</button>-->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
+                <div class="am-form-group tpl-table-list-select">
+                  <select data-am-selected="{btnSize: 'sm'}" >
+                    <option value="-1">所有类别</option>
+                    <option th:each="dataGroup : ${dataGroups}"
+                            th:value="${dataGroup.id}"
+                            th:text="${dataGroup.groupName}">
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <!--<div class="am-u-sm-12 am-u-md-12 am-u-lg-3">-->
+                <!--<div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">-->
+                  <!--<input type="text" class="am-form-field ">-->
+                  <!--<span class="am-input-group-btn">-->
+                    <!--<button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="button"></button>-->
+                  <!--</span>-->
+                <!--</div>-->
+              <!--</div>-->
+
+              <div class="am-u-sm-12">
+                <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black ">
+                  <thead>
+                  <tr>
+                    <th>名称</th>
+                    <th>类型</th>
+                    <th>创建时间</th>
+                    <th>最后修改时间</th>
+                    <th>操作</th>
+                  </tr>
+                  </thead>
+                  <tbody id="table-data">
+                    <tr th:each="dataSource,iterStat : ${dataSources}"
+                        th:classappend="${iterStat.odd} ? 'gradeX' : 'even gradeC'"
+                        th:attr="data-id=${dataSource.id}">
+                      <td th:text="${dataSource.sourceName}"></td>
+                      <td th:text="${dataSource.sourceType}"></td>
+                      <td th:text="${dataSource.createDate}"></td>
+                      <td th:text="${dataSource.modifyData}"></td>
+                      <td>
+                        <div class="tpl-table-black-operation">
+                          <a href="javascript:;" th:attr="data-id=${dataSource.id}" approach="preview">
+                            <i class="am-icon-eye"></i> 预览数据</a>
+                          <a href="javascript:;" th:attr="data-id=${dataSource.id},data-type=${dataSource.sourceType}" approach="edit">
+                            <i class="am-icon-pencil"></i> 编辑</a>
+                          <a href="javascript:;" class="tpl-table-black-operation-del"
+                             th:attr="data-id=${dataSource.id}" approach="delete">
+                            <i class="am-icon-trash"></i> 删除</a>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- 分页 -->
+              <div class="am-u-lg-12 am-cf" th:if="${pages.totalPage > 1}">
+                <div class="am-fr">
+                  <ul class="am-pagination tpl-pagination">
+                    <li th:classappend="${pages.previous == 0} ? 'am-disabled'"><a href="/?p=1">«</a></li>
+                    <li th:each="item : ${pages.getPages()}" th:classappend="${item == pages.pageNum} ? 'am-active am-disabled'"><a th:href="'/?p=' + ${item}" th:text="${item}"></a></li>
+                    <li th:classappend="${pages.pageNum == pages.totalPage} ? 'am-disabled'"><a th:href="'/?p=' + ${pages.totalPage}">»</a></li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 添加数据源模态框 -->
+<div class="am-modal am-modal-no-btn" tabindex="-1" id="modal-add-data">
+  <div class="am-modal-dialog">
+    <div class="am-modal-hd">新建数据源
+      <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+    </div>
+    <div class="am-modal-bd" style="text-align: left">
+
+      <form class="am-form tpl-form-line-form" id="form">
+        <div class="am-form-group">
+          <label class="am-u-sm-3 am-form-label">数据源名称 <span class="tpl-form-line-small-title">Name</span></label>
+          <div class="am-u-sm-9">
+            <input type="text" name="sourceName" class="tpl-form-input" placeholder="请输入数据源名称">
+          </div>
+        </div>
+
+        <div class="am-form-group">
+          <label class="am-u-sm-3 am-form-label">数据源分组 <span class="tpl-form-line-small-title">Name</span></label>
+          <div class="am-u-sm-9">
+            <select data-am-selected="{searchBox: 1}" style="display: none;" name="groupId">
+              <option th:each="dataGroup : ${dataGroups}"
+                      th:value="${dataGroup.id}"
+                      th:text="${dataGroup.groupName}">
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="am-form-group">
+          <label class="am-u-sm-3 am-form-label">数据源类型 <span class="tpl-form-line-small-title">Type</span></label>
+          <div class="am-u-sm-9">
+            <label class="am-radio-inline">
+              <input type="radio" value="hdfs" name="sourceType"> HDFS
+            </label>
+            <label class="am-radio-inline">
+              <input type="radio" value="hive" name="sourceType"> Hive
+            </label>
+          </div>
+        </div>
+
+        <div class="am-form-group">
+          <label class="am-u-sm-3 am-form-label">方式 <span class="tpl-form-line-small-title">Mode</span></label>
+          <div class="am-u-sm-9">
+            <label class="am-radio-inline">
+              <input type="radio" value="file" name="mode"> 本地文件
+            </label>
+            <label class="am-radio-inline">
+              <input type="radio" value="mysql" name="mode"> MySQL
+            </label>
+          </div>
+        </div>
+
+        <!--<div class="am-form-group" hidden>-->
+          <!--<label class="am-u-sm-3 am-form-label">导入模式 <span class="tpl-form-line-small-title">Approach</span></label>-->
+          <!--<div class="am-u-sm-9">-->
+            <!--<select name="approach" data-am-selected style="display: none;">-->
+              <!--<option value="create">创建</option>-->
+              <!--<option value="overwrite">覆写</option>-->
+              <!--<option value="append">追加</option>-->
+            <!--</select>-->
+          <!--</div>-->
+        <!--</div>-->
+
+        <div class="am-form-group" id="add-file-control" hidden>
+          <label class="am-u-sm-3 am-form-label">数据源文件 <span class="tpl-form-line-small-title">File</span></label>
+          <div class="am-u-sm-9">
+            <input type="file" name="file">
+          </div>
+        </div>
+
+        <div class="am-form-group" id="add-database-control" hidden>
+          <label class="am-u-sm-3 am-form-label">数据库信息 <span class="tpl-form-line-small-title">Database</span></label>
+          <div class="am-u-sm-9" style="font-size: 1.5rem;">
+            <div class="row am-form-group">
+              <div class="am-u-sm-2">地址</div>
+              <div class="am-u-sm-4"><input type="text" name="address" placeholder="地址"></div>
+              <div class="am-u-sm-2">端口</div>
+              <div class="am-u-sm-4"><input type="text" name="port" placeholder="端口"></div>
+            </div>
+            <div class="row am-form-group">
+              <div class="am-u-sm-2">数据库名称</div>
+              <div class="am-u-sm-4"><input type="text" name="database" placeholder="数据库名称"></div>
+              <div class="am-u-sm-2">数据表名称</div>
+              <div class="am-u-sm-4"><input type="text" name="table" placeholder="数据表名称"></div>
+            </div>
+            <div class="row am-form-group">
+              <div class="am-u-sm-2">用户名</div>
+              <div class="am-u-sm-4"><input type="text" name="username" placeholder="用户名"></div>
+              <div class="am-u-sm-2">密码</div>
+              <div class="am-u-sm-4"><input type="text" name="password" placeholder="密码"></div>
+            </div>
+            <div class="row am-form-group">
+              <div class="am-u-sm-2">编码方式</div>
+              <div class="am-u-sm-4"><input type="text" name="charset" placeholder="编码方式"></div>
+              <div class="am-u-sm-2"></div>
+              <div class="am-u-sm-4"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="am-form-group" id="add-hive-column-control" hidden>
+          <label class="am-u-sm-3 am-form-label">Hive列信息 <span class="tpl-form-line-small-title">Hive</span></label>
+          <div class="am-u-sm-9" id="hive-column">
+
+            <div class="row am-form-group">
+              <div class="am-u-sm-2">列分隔符 </div>
+              <div class="am-u-sm-10"><input type="text" name="fieldTerminated" placeholder="请输入列分隔符(, \t ...)"></div>
+            </div>
+
+            <div class="row am-form-group">
+              <div class="am-u-sm-2">列名 </div>
+              <div class="am-u-sm-3"><input class="am-inline" type="text" name="columns" placeholder="请输入列名"></div>
+              <div class="am-u-sm-2">数据类型 </div>
+              <div class="am-u-sm-3">
+                <select class="am-inline" name="dataTypes">
+                  <option value="string">string</option>
+                  <option value="int">int</option>
+                  <option value="double">double</option>
+                </select>
+              </div>
+              <div class="am-u-sm-2"><span class="select plus">+</span></div>
+            </div>
+
+            <div id="other-hive-columns" style="padding:0; margin:0;"></div>
+
+          </div>
+        </div>
+
+        <div class="am-form-group">
+          <div class="am-u-sm-9 am-u-sm-push-3">
+            <button type="button" id="submit-btn-add" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- 更新数据源数据模态框 -->
+<div class="am-modal am-modal-no-btn" tabindex="-1" id="modal-edit-data">
+  <div class="am-modal-dialog">
+    <div class="am-modal-hd">更新数据源数据
+      <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+    </div>
+    <div class="am-modal-bd" style="text-align: left">
+
+      <form class="am-form tpl-form-line-form" id="form-edit">
+        <div hidden><input type="text" name="sourceId"></div>
+
+        <div class="am-form-group">
+          <label class="am-u-sm-3 am-form-label">方式 <span class="tpl-form-line-small-title">Mode</span></label>
+          <div class="am-u-sm-9">
+            <label class="am-radio-inline">
+              <input type="radio" value="file" name="mode"> 本地文件
+            </label>
+            <label class="am-radio-inline">
+              <input type="radio" value="mysql" name="mode"> MySQL
+            </label>
+          </div>
+        </div>
+
+        <div class="am-form-group">
+          <label class="am-u-sm-3 am-form-label">导入模式 <span class="tpl-form-line-small-title">Approach</span></label>
+          <div class="am-u-sm-9">
+            <select name="approach" data-am-selected style="display: none;">
+              <option value="overwrite">覆写</option>
+              <option value="append">追加</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="am-form-group" id="edit-file-control" hidden>
+          <label class="am-u-sm-3 am-form-label">数据源文件 <span class="tpl-form-line-small-title">File</span></label>
+          <div class="am-u-sm-9">
+            <input type="file" name="file">
+          </div>
+        </div>
+
+        <div class="am-form-group" id="edit-database-control" hidden>
+          <label class="am-u-sm-3 am-form-label">数据库信息 <span class="tpl-form-line-small-title">Database</span></label>
+          <div class="am-u-sm-9" style="font-size: 1.5rem;">
+            <div class="row am-form-group">
+              <div class="am-u-sm-2">地址</div>
+              <div class="am-u-sm-4"><input type="text" name="address" placeholder="地址"></div>
+              <div class="am-u-sm-2">端口</div>
+              <div class="am-u-sm-4"><input type="text" name="port" placeholder="端口"></div>
+            </div>
+            <div class="row am-form-group">
+              <div class="am-u-sm-2">数据库名称</div>
+              <div class="am-u-sm-4"><input type="text" name="database" placeholder="数据库名称"></div>
+              <div class="am-u-sm-2">数据表名称</div>
+              <div class="am-u-sm-4"><input type="text" name="table" placeholder="数据表名称"></div>
+            </div>
+            <div class="row am-form-group">
+              <div class="am-u-sm-2">用户名</div>
+              <div class="am-u-sm-4"><input type="text" name="username" placeholder="用户名"></div>
+              <div class="am-u-sm-2">密码</div>
+              <div class="am-u-sm-4"><input type="text" name="password" placeholder="密码"></div>
+            </div>
+            <div class="row am-form-group">
+              <div class="am-u-sm-2">编码方式</div>
+              <div class="am-u-sm-4"><input type="text" name="charset" placeholder="编码方式"></div>
+              <div class="am-u-sm-2"></div>
+              <div class="am-u-sm-4"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="am-form-group">
+          <div class="am-u-sm-9 am-u-sm-push-3">
+            <button type="button" id="submit-btn-edit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- 预览数据模态框 -->
+<div class="am-modal am-modal-no-btn" tabindex="-1" id="modal-preview-data">
+  <div class="am-modal-dialog">
+    <div class="am-modal-hd">预览数据
+      <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+    </div>
+    <div class="am-modal-bd">
+      <div class="am-scrollable-horizontal ">
+        <table width="100%" class="am-table am-table-compact am-text-nowrap tpl-table-black am-table-bordered " style="color: #838FA1">
+          <!--<thead>-->
+          <!--<tr>-->
+            <!--<th style="text-align: center">数据内容</th>-->
+          <!--</tr>-->
+          <!--</thead>-->
+          <tbody id="preview-table-body">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+  <div class="am-modal-dialog">
+    <div class="am-modal-hd">提示消息</div>
+    <div class="am-modal-bd">
+      <span id="msg"></span>
+    </div>
+    <div class="am-modal-footer">
+      <span class="am-modal-btn">确定</span>
+    </div>
+  </div>
+</div>
+
+<!-- hive数据结构 - 复制源 -->
+<div id="hive-column-copy" hidden>
+<div class="row am-form-group">
+  <div class="am-u-sm-2">列名: </div>
+  <div class="am-u-sm-3"><input class="am-inline" type="text" name="columns" placeholder="请输入列名"></div>
+  <div class="am-u-sm-2">数据类型: </div>
+  <div class="am-u-sm-3">
+    <select class="am-inline" name="dataTypes">
+      <option value="string">string</option>
+      <option value="int">int</option>
+      <option value="double">double</option>
+    </select>
+  </div>
+  <div class="am-u-sm-1"><span class="select plus">+</span></div>
+  <div class="am-u-sm-1"><span class="select reduce">-</span></div>
+</div>
+</div>
+
+<script th:src="@{/assets/js/amazeui.min.js}"></script>
+<script th:src="@{/assets/js/amazeui.datatables.min.js}"></script>
+<script th:src="@{/assets/js/dataTables.responsive.min.js}"></script>
+<script th:src="@{/assets/js/app.js}"></script>
+<script th:src="@{/assets/js/index.js}"></script>
+
+<script type="text/javascript">
+
+</script>
+
+</body>
+
+</html>

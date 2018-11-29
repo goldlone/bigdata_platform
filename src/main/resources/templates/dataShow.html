@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>大数据计算平台 - 结果展示</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="index">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp"/>
+  <link rel="icon" type="image/png" th:href="@{/assets/i/favicon.png}">
+  <link rel="apple-touch-icon-precomposed" th:href="@{/assets/i/app-icon72x72@2x.png}">
+  <meta name="apple-mobile-web-app-title" content="结果展示"/>
+  <script th:src="@{/assets/js/echarts.min.js}"></script>
+  <link rel="stylesheet" th:href="@{/assets/css/amazeui.min.css}"/>
+  <link rel="stylesheet" th:href="@{/assets/css/amazeui.datatables.min.css}"/>
+  <link rel="stylesheet" th:href="@{/assets/css/app.css}">
+  <script th:src="@{/assets/js/jquery.min.js}"></script>
+
+</head>
+
+<body data-type="widgets">
+<script th:src="@{/assets/js/theme.js}"></script>
+
+<div class="am-g tpl-g">
+  <!-- 头部 -->
+  <div th:include="header.html"></div>
+
+  <!-- 风格切换 -->
+  <div th:include="style.html"></div>
+
+  <!-- 侧边导航栏 -->
+  <div th:include="left-sidebar.html"></div>
+
+  <!-- 内容区域 -->
+  <div class="tpl-content-wrapper">
+
+
+    <div class="container-fluid am-cf">
+      <div class="row">
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+          <div class="page-header-heading"><span class="am-icon-home page-header-heading-icon"></span> 结果展示 <small>Data Visualization</small></div>
+          <p class="page-header-description">图表组件使用的是 <a href="http://echarts.baidu.com" target="_blank">百度图表echarts</a>。</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row-content am-cf">
+
+      <div class="widget am-cf">
+        <div class="widget-head am-cf">
+          <div class="widget-title am-fl">选择展示数据源  <span id="currentData"></span></div>
+          <div class="widget-function am-fr">
+            <a href="javascript:void(0);" class="am-icon-cog"></a>
+          </div>
+        </div>
+        <div class="widget-body am-fr">
+          <div class="row">
+            <div class="am-u-lg-2 am-u-sm-6">
+              <span>原始数据源：</span>
+            </div>
+            <div class="am-u-lg-4 am-u-sm-6">
+              <select data-am-selected="{maxHeight: 150}"
+                      placeholder="选一个撒"
+                      id="dataSourceData">
+                <option selected value="-1">请选择</option>
+                <option th:each="dataSource : ${dataSourceList}"
+                        th:value="${dataSource.id}"
+                        th:text="${dataSource.sourceName}"></option>
+              </select>
+            </div>
+            <div class="am-u-lg-2 am-u-sm-6">
+              <span>运行结果：</span>
+            </div>
+            <div class="am-u-lg-4 am-u-sm-6">
+              <select data-am-selected="{maxHeight: 150}"
+                      id="dataFlowData">
+                <option selected value="-1">请选择</option>
+                <option th:each="dataFlow : ${dataFlowList}"
+                        th:value="${dataFlow.id}"
+                        th:text="${dataFlow.flowName}"></option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <br><br>
+            <div class="am-u-lg-2 am-u-sm-6">选择展示图表类型：</div>
+            <div class="am-u-lg-10 am-u-sm-6">
+              <select data-am-selected name="chart-type">
+                <option value="line">折线图</option>
+                <option value="bar">柱形图</option>
+                <option value="pie">饼图</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <br><br>
+            <div class="am-u-lg-2 am-u-sm-6">
+              <span>X：</span>
+            </div>
+            <div class="am-u-lg-4 am-u-sm-6">
+              <select data-am-selected="{maxHeight: 150}" name="x">
+              </select>
+            </div>
+            <div class="am-u-lg-2 am-u-sm-6">
+              <span>Y：</span>
+            </div>
+            <div class="am-u-lg-4 am-u-sm-6">
+              <select data-am-selected="{maxHeight: 150}" name="y">
+              </select>
+            </div>
+          </div>
+
+          <div class="row" style="text-align: left">
+            <br><br>
+            <div class="am-u-sm-12 am-u-lg-12">
+              <button type="button" id="btn-show" class="am-btn am-btn-success am-radius" style="width: 25%">展示</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="widget am-cf">
+        <div class="widget-head am-cf">
+          <div class="widget-title am-fl">图表展示</div>
+          <div class="widget-function am-fr">
+            <a href="javascript:void(0);" class="am-icon-cog"></a>
+          </div>
+        </div>
+        <div class="widget-body am-fr">
+
+          <div style="height: 400px" class="" id="chart-1">
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+  </div>
+</div>
+
+<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+  <div class="am-modal-dialog">
+    <div class="am-modal-hd">提示消息</div>
+    <div class="am-modal-bd">
+      <span id="msg"></span>
+    </div>
+    <div class="am-modal-footer">
+      <span class="am-modal-btn">确定</span>
+    </div>
+  </div>
+</div>
+
+<script th:src="@{/assets/js/amazeui.min.js}"></script>
+<script th:src="@{/assets/js/amazeui.datatables.min.js}"></script>
+<script th:src="@{/assets/js/dataTables.responsive.min.js}"></script>
+<script th:src="@{/assets/js/app.js}"></script>
+<script th:src="@{/assets/js/echarts.min.js}"></script>
+
+<script type="text/javascript">
+  $(function () {
+    var alertModel = $("#my-alert");
+    var msgSpan = $("#msg");
+    var dataSourceData = $("#dataSourceData");
+    var dataFlowData = $("#dataFlowData");
+    var currentData = $("#currentData");
+
+    var _tableData = "";
+    var _dataId = "";
+    var _dataType = "";
+
+    function showAlert(msg) {
+      msgSpan.html(msg);
+      alertModel.modal();
+    }
+
+    var dataType = "";
+    var dataId = -1;
+    dataSourceData.change(function () {
+      currentData.html("<span class='am-badge am-badge-success am-round'>"+$(this).find("option:selected").text()+"</span>");
+      var id = $(this).val();
+      dataId = id;
+      dataType = "dataSource";
+      $.ajax({
+        url: "/dataSource/selectOneById",
+        method: "post",
+        data: {
+          sourceId: id
+        },
+        success: function (res) {
+          if(res.code === 1001) {
+            var tableColumn = res.data.tableColumn;
+            var cols = tableColumn.split(",");
+            $("select[name='x']").html("");
+            $("select[name='y']").html("");
+            for(i=0; i<cols.length; i++) {
+              $("select[name='x']").append("<option value='"+cols[i]+"'>"+cols[i]+"</option>>")
+              $("select[name='y']").append("<option value='"+cols[i]+"'>"+cols[i]+"</option>>")
+            }
+          } else {
+            showAlert(res.msg);
+          }
+        }
+      });
+    });
+    dataFlowData.change(function () {
+      currentData.html("<span class='am-badge am-badge-success am-round'>"+$(this).find("option:selected").text()+"</span>");
+      var id = $(this).val();
+      dataId = id;
+      dataType = "dataFlow";
+      $.ajax({
+        url: "/dataShow/getDataFlowInfoFromHive",
+        method: "post",
+        data: {
+          dataFlowId: id
+        },
+        success: function (res) {
+          if(res.code === 1001) {
+            console.log(res.data);
+            var cols = res.data;
+            $("select[name='x']").html("");
+            $("select[name='y']").html("");
+            for(i=0; i<cols.length; i++) {
+              $("select[name='x']").append("<option value='"+cols[i]+"'>"+cols[i]+"</option>>");
+              $("select[name='y']").append("<option value='"+cols[i]+"'>"+cols[i]+"</option>>");
+            }
+          } else {
+            showAlert(res.msg);
+          }
+        }
+      });
+    });
+
+    // 点击获取数据并生成图表
+    $("#btn-show").click(function () {
+      var x = $("select[name='x']").val();
+      var y = $("select[name='y']").val();
+      var xData = "";
+      var yData = "";
+      if(_tableData !== "" && _dataId===dataId && _dataType===dataType) {
+        xData = _tableData[x];
+        yData = _tableData[y];
+      } else {
+        var data = {};
+        var url = "";
+        if(dataType === "dataSource") {
+          url = "/dataShow/getDataSourceDataFromHive";
+          data = {
+            dataSourceId : dataId
+          }
+        } else if(dataType === "dataFlow") {
+          url = "/dataShow/getDataFlowResultDataFromHive";
+          data = {
+            dataFlowId : dataId
+          }
+        }
+        $.ajax({
+          url: url,
+          method: "post",
+          async: false,
+          data: data,
+          success: function (res) {
+            _tableData = res.data;
+            _dataId = dataId;
+            _dataType = dataType;
+            xData = res.data[x];
+            yData = res.data[y];
+
+            console.log(res.data);
+            console.log(xData);
+            console.log(yData);
+          }
+        });
+      }
+
+      show_chart(x, xData, y, yData);
+    });
+
+    // 显示图表: (x, y)
+    function show_chart(x, xData, y, yData) {
+      var type = $("select[name='chart-type']").val();
+      var chart = echarts.init(document.getElementById("chart-1"));
+
+      if(type !== "pie") {
+        var option = {
+          color: ['#3398DB'],
+          tooltip : {
+            trigger: 'axis',
+            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+              type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis : [
+            {
+              type : 'category',
+              data : xData,
+              axisTick: {
+                alignWithLabel: true
+              }
+            }
+          ],
+          yAxis : [
+            {
+              type : 'value'
+            }
+          ],
+          series : [
+            {
+              name:y,
+              type:type,
+              barWidth: '60%',
+              data:yData
+            }
+          ]
+        };
+        chart.setOption(option);
+      } else {
+        var seriesData = [];
+        var selected = {};
+        for(var i=0; i<xData.length; i++) {
+          seriesData.push({
+            name: xData[i],
+            value: yData[i]
+          });
+          selected[xData[i]] = i < 10;
+        }
+        var option = {
+          title : {
+            text: ' ',
+            subtext: ' ',
+            x:'center'
+          },
+          tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+          },
+          legend: {
+            type: 'scroll',
+            orient: 'vertical',
+            left: 'left',
+            data: xData,
+            selected: selected
+          },
+          series : [{
+            name: y,
+            type: 'pie',
+            radius : '55%',
+            center: ['50%', '60%'],
+            data: seriesData,
+            itemStyle: {
+              emphasis: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }
+          ]
+        };
+        chart.setOption(option);
+      }
+    }
+  });
+</script>
+
+</body>
+
+</html>

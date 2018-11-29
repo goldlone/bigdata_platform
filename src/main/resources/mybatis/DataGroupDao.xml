@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.goldlone.bigdata_platform.dao.DataGroupDao">
+
+  <resultMap id="DataGroupRef" type="cn.goldlone.bigdata_platform.model.DataGroup">
+    <result property="id" column="id" />
+    <result property="groupName" column="group_name" />
+    <result property="userId" column="user_id" />
+  </resultMap>
+
+
+  <select id="getDataGroup" resultMap="DataGroupRef">
+    select id, group_name, user_id
+    from data_group
+    where user_id=#{userId}
+    limit #{offset}, #{limit}
+  </select>
+
+  <insert id="addDataGroup" parameterType="cn.goldlone.bigdata_platform.model.DataGroup"
+          useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    insert
+    into data_group(group_name, user_id)
+    values (#{groupName}, #{userId})
+  </insert>
+
+  <update id="updateDataGroup" parameterType="cn.goldlone.bigdata_platform.model.DataGroup">
+    update data_group
+    set group_name = #{groupName}
+    where id = #{id}
+  </update>
+
+  <delete id="deleteDataGroup" parameterType="int">
+    delete
+    from data_group
+    where id = #{id}
+  </delete>
+
+</mapper>

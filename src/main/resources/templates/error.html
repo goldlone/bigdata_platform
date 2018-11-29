@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>大数据计算平台</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="index">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp"/>
+  <link rel="icon" type="image/png" th:href="@{/assets/i/favicon.png}">
+  <link rel="apple-touch-icon-precomposed" th:href="@{/assets/i/app-icon72x72@2x.png}">
+  <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+  <script th:src="@{/assets/js/echarts.min.js}"></script>
+  <link rel="stylesheet" th:href="@{/assets/css/amazeui.min.css}"/>
+  <link rel="stylesheet" th:href="@{/assets/css/amazeui.datatables.min.css}"/>
+  <link rel="stylesheet" th:href="@{/assets/css/app.css}">
+  <script th:src="@{/assets/js/jquery.min.js}"></script>
+
+</head>
+
+<body data-type="widgets">
+<script th:src="@{/assets/js/theme.js}"></script>
+
+  <div class="am-g tpl-g">
+    <!-- 头部 -->
+    <div th:include="header.html"></div>
+
+    <!-- 风格切换 -->
+    <div th:include="style.html"></div>
+
+    <!-- 侧边导航栏 -->
+    <div th:include="left-sidebar.html"></div>
+
+    <!-- 内容区域 -->
+    <div class="tpl-content-wrapper">
+
+
+      <div class="row-content am-cf">
+        <div class="widget am-cf">
+          <div class="widget-body">
+            <div class="tpl-page-state">
+              <div class="tpl-page-state-title am-text-center tpl-error-title">Error</div>
+              <div class="tpl-error-title-info">出错了</div>
+              <div class="tpl-page-state-content tpl-error-content">
+
+                <!--<p>对不起,没有找到您所需要的页面,可能是URL不确定,或者页面已被移除。</p>-->
+                <p>对不起，系统出现异常！</p>
+                <a class="am-btn am-btn-secondary am-radius tpl-error-btn" href="/">Back Home</a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+  <script th:src="@{/assets/js/amazeui.min.js}"></script>
+  <script th:src="@{/assets/js/amazeui.datatables.min.js}"></script>
+  <script th:src="@{/assets/js/dataTables.responsive.min.js}"></script>
+  <script th:src="@{/assets/js/app.js}"></script>
+</body>
+
+</html>

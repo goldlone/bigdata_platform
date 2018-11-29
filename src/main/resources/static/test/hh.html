@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+  <form action="/file/upload/hdfs" method="post" enctype="multipart/form-data">
+    数据源名称: <input type="text" name="sourceName" required /><br><br>
+    数据源类型: <input type="radio" name="sourceType" value="hdfs" checked required />HDFS<br><br>
+    数源源分组:
+    <select name="groupId" required>
+      <option value="1">日志</option>
+      <option value="2">金融</option>
+      <option value="3">通信</option>
+      <option value="4">医疗</option>
+      <option value="5">交通</option>
+    </select><br><br>
+    数据源文件: <input name="file" type="file" />
+
+    <br><br><br>
+    <input type="submit" value="提交" />
+  </form>
+
+</body>
+</html>
